@@ -378,6 +378,17 @@ def RetCC_X86_64_WebKit_JS : CallingConv<[
   CCIfType<[i64], CCAssignToReg<[RAX]>>
 ]>;
 
+// X86-64 GO_STACK return-value convention. Copied from WebKit_JS
+// This won't be used.
+// All returns will be interpreted as function parameters
+def RetCC_X86_64_GO_STACK : CallingConv<[
+  // Promote all types to i64
+  CCIfType<[i8, i16, i32], CCPromoteToType<i64>>,
+
+  // Return: RAX
+  CCIfType<[i64], CCAssignToReg<[RAX]>>
+]>;
+
 def RetCC_X86_64_Swift : CallingConv<[
 
   CCIfSwiftError<CCIfType<[i64], CCAssignToReg<[R12]>>>,
@@ -449,6 +460,7 @@ def RetCC_X86_64 : CallingConv<[
 
   // Handle JavaScript calls.
   CCIfCC<"CallingConv::WebKit_JS", CCDelegateTo<RetCC_X86_64_WebKit_JS>>,
+  CCIfCC<"CallingConv::GO_STACK", CCDelegateTo<RetCC_X86_64_GO_STACK>>,
   CCIfCC<"CallingConv::AnyReg", CCDelegateTo<RetCC_X86_64_AnyReg>>,
 
   // Handle Swift calls.
@@ -703,6 +715,27 @@ def CC_X86_64_WebKit_JS : CallingConv<[
   // in 8 byte stack slots.
   CCIfType<[i32, f32], CCAssignToStack<4, 4>>,
   CCIfType<[i64, f64], CCAssignToStack<8, 8>>
+]>;
+
+def CC_X86_64_GO_STACK : CallingConv<[
+  // Promote i8/i16 arguments to i32.
+  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
+
+  // Only the first integer argument is passed in register.
+  CCIfType<[i32], CCAssignToStack<4, 4>>,
+  CCIfType<[i64], CCAssignToStack<8, 8>>,
+
+  // Other SSE vectors get 16-byte stack slots that are 16-byte aligned.
+  CCIfType<[v16i8, v8i16, v4i32, v2i64, v4f32, v2f64], CCAssignToStack<16, 16>>,
+
+  // 256-bit AVX vectors get 32-byte stack slots that are 32-byte aligned.
+  CCIfType<[v32i8, v16i16, v8i32, v4i64, v8f32, v4f64],
+           CCAssignToStack<32, 32>>,
+
+  // 512-bit AVX 512-bit vectors get 64-byte stack slots that are 64-byte aligned.
+  CCIfType<[v64i8, v32i16, v16i32, v8i64, v16f32, v8f64],
+           CCAssignToStack<64, 64>>
+
 ]>;
 
 // No explicit register is specified for the AnyReg calling convention. The
@@ -1020,6 +1053,7 @@ def CC_X86_64 : CallingConv<[
   CCIfCC<"CallingConv::GHC", CCDelegateTo<CC_X86_64_GHC>>,
   CCIfCC<"CallingConv::HiPE", CCDelegateTo<CC_X86_64_HiPE>>,
   CCIfCC<"CallingConv::WebKit_JS", CCDelegateTo<CC_X86_64_WebKit_JS>>,
+  CCIfCC<"CallingConv::GO_STACK", CCDelegateTo<CC_X86_64_GO_STACK>>,
   CCIfCC<"CallingConv::AnyReg", CCDelegateTo<CC_X86_64_AnyReg>>,
   CCIfCC<"CallingConv::Win64", CCDelegateTo<CC_X86_Win64_C>>,
   CCIfCC<"CallingConv::X86_64_SysV", CCDelegateTo<CC_X86_64_C>>,

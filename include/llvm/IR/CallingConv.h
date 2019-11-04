@@ -223,6 +223,9 @@ namespace CallingConv {
     // Calling convention between AArch64 Advanced SIMD functions
     AArch64_VectorCall = 97,
 
+    // Golang uses stack to pass arguments and return values; no callee-saved registers
+    GO_STACK = 1022,
+
     /// The highest possible calling convention ID. Must be some 2^k - 1.
     MaxID = 1023
   };
