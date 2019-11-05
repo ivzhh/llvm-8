@@ -25,14 +25,20 @@ if(NOT DEFINED LLVM_VERSION_SUFFIX)
 endif()
 
 MESSAGE("CMAKE_MAKE_PROGRAM: ${CMAKE_MAKE_PROGRAM}")
+MESSAGE("CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 
 
 option(BUILD_SINGLE_THREAD_FOR_LINKING "Only use one thread for linking, when memory is limited" ON)
 
+if ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo"))
 if (${BUILD_SINGLE_THREAD_FOR_LINKING})
   MESSAGE("BUILD_SINGLE_THREAD_FOR_LINKING: ${BUILD_SINGLE_THREAD_FOR_LINKING}")
   set_property(GLOBAL PROPERTY JOB_POOLS link_jobs=1)
   set(CMAKE_JOB_POOL_LINK link_jobs)
+endif()
+else()
+  MESSAGE("Use multi-thread linking in non-debug mode")
+  unset(CMAKE_JOB_POOL_LINK)
 endif()
 
 

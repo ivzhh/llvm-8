@@ -383,10 +383,11 @@ def RetCC_X86_64_WebKit_JS : CallingConv<[
 // All returns will be interpreted as function parameters
 def RetCC_X86_64_GO_STACK : CallingConv<[
   // Promote all types to i64
-  CCIfType<[i8, i16, i32], CCPromoteToType<i64>>,
+  CCIfType<[i8, i16], CCPromoteToType<i32>>,
 
   // Return: RAX
-  CCIfType<[i64], CCAssignToReg<[RAX]>>
+  CCIfType<[i32], CCAssignToReg<[EAX]>>,
+  CCIfType<[i32, i64], CCAssignToReg<[RAX]>>
 ]>;
 
 def RetCC_X86_64_Swift : CallingConv<[
@@ -720,21 +721,22 @@ def CC_X86_64_WebKit_JS : CallingConv<[
 def CC_X86_64_GO_STACK : CallingConv<[
   // Promote i8/i16 arguments to i64.
   // little endian system, valid bytes on lower address
-  CCIfType<[i1, i8, i16, i32], CCPromoteToType<i64>>,
+  CCIfType<[i1, i8, i16, i32], CCPromoteToType<i32>>,
 
   // Only the first integer argument is passed in register.
-  CCIfType<[i64], CCAssignToStack<8, 8>>,
+  CCIfType<[i32, f32], CCAssignToStack<8, 4>>,
+  CCIfType<[i64], CCAssignToStack<8, 4>>,
 
   // Other SSE vectors get 16-byte stack slots that are 16-byte aligned.
-  CCIfType<[v16i8, v8i16, v4i32, v2i64, v4f32, v2f64], CCAssignToStack<16, 8>>,
+  CCIfType<[v16i8, v8i16, v4i32, v2i64, v4f32, v2f64], CCAssignToStack<16, 4>>,
 
   // 256-bit AVX vectors get 32-byte stack slots that are 32-byte aligned.
   CCIfType<[v32i8, v16i16, v8i32, v4i64, v8f32, v4f64],
-           CCAssignToStack<32, 8>>,
+           CCAssignToStack<32, 4>>,
 
   // 512-bit AVX 512-bit vectors get 64-byte stack slots that are 64-byte aligned.
   CCIfType<[v64i8, v32i16, v16i32, v8i64, v16f32, v8f64],
-           CCAssignToStack<64, 8>>
+           CCAssignToStack<64, 4>>
 
 ]>;
 
