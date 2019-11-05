@@ -718,11 +718,11 @@ def CC_X86_64_WebKit_JS : CallingConv<[
 ]>;
 
 def CC_X86_64_GO_STACK : CallingConv<[
-  // Promote i8/i16 arguments to i32.
-  CCIfType<[i1, i8, i16], CCPromoteToType<i32>>,
+  // Promote i8/i16 arguments to i64.
+  // little endian system, valid bytes on lower address
+  CCIfType<[i1, i8, i16, i32], CCPromoteToType<i64>>,
 
   // Only the first integer argument is passed in register.
-  CCIfType<[i32], CCAssignToStack<4, 8>>,
   CCIfType<[i64], CCAssignToStack<8, 8>>,
 
   // Other SSE vectors get 16-byte stack slots that are 16-byte aligned.
