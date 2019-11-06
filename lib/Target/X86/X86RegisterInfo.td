@@ -391,30 +391,22 @@ def GR8 : RegisterClass<"X86", [i8],  8,
 
 let isAllocatable = 0 in
 def GRH8 : RegisterClass<"X86", [i8],  8,
-                         (add BH, SIH, DIH, BPH, SPH, R8BH, R9BH, R10BH, R11BH,
+                         (add SIH, DIH, BPH, SPH, R8BH, R9BH, R10BH, R11BH,
                               R12BH, R13BH, R14BH, R15BH)>;
 
 def GR16 : RegisterClass<"X86", [i16], 16,
-                         (add AX, CX, DX, SI, DI, BP, SP,
+                         (add AX, CX, DX, SI, DI, BX, BP, SP,
                               R8W, R9W, R10W, R11W, R14W, R15W, R12W, R13W)>;
 
 let isAllocatable = 0 in
 def GRH16 : RegisterClass<"X86", [i16], 16,
-                          (add BX, HAX, HCX, HDX, HSI, HDI, HBX, HBP, HSP, HIP,
+                          (add HAX, HCX, HDX, HSI, HDI, HBX, HBP, HSP, HIP,
                                R8WH, R9WH, R10WH, R11WH, R12WH, R13WH, R14WH,
                                R15WH)>;
 
 def GR32 : RegisterClass<"X86", [i32], 32,
-                         (add EAX, ECX, EDX, ESI, EDI, EBP, ESP,
+                         (add EAX, ECX, EDX, ESI, EDI, EBX, EBP, ESP,
                               R8D, R9D, R10D, R11D, R14D, R15D, R12D, R13D)>;
-
-let isAllocatable = 0 in
-def GR32H : RegisterClass<"X86", [i32], 32,
-                         (add EBX)>;
-
-let isAllocatable = 0 in
-def GR64H : RegisterClass<"X86", [i64], 64,
-                         (add RBX)>;
 
 // GR64 - 64-bit GPRs. This oddly includes RIP, which isn't accurate, since
 // RIP isn't really a register and it can't be used anywhere except in an
@@ -423,7 +415,7 @@ def GR64H : RegisterClass<"X86", [i64], 64,
 // tests because of the inclusion of RIP in this register class.
 def GR64 : RegisterClass<"X86", [i64], 64,
                          (add RAX, RCX, RDX, RSI, RDI, R8, R9, R10, R11,
-                              R14, R15, R12, R13, RBP, RSP, RIP)>;
+                              RBX, R14, R15, R12, R13, RBP, RSP, RIP)>;
 
 // Segment registers for use by MOV instructions (and others) that have a
 //   segment register as one operand.  Always contain a 16-bit segment
