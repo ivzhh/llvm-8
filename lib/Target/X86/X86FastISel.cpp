@@ -3226,6 +3226,7 @@ bool X86FastISel::fastLowerCall(CallLoweringInfo &CLI) {
   case CallingConv::C:
   case CallingConv::Fast:
   case CallingConv::WebKit_JS:
+  case CallingConv::GO_STACK:
   case CallingConv::Swift:
   case CallingConv::X86_FastCall:
   case CallingConv::X86_StdCall:

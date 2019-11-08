@@ -348,6 +348,7 @@ static void PrintCallingConv(unsigned cc, raw_ostream &Out) {
   case CallingConv::Fast:          Out << "fastcc"; break;
   case CallingConv::Cold:          Out << "coldcc"; break;
   case CallingConv::WebKit_JS:     Out << "webkit_jscc"; break;
+  case CallingConv::GO_STACK:     Out << "go_stackcc"; break;
   case CallingConv::AnyReg:        Out << "anyregcc"; break;
   case CallingConv::PreserveMost:  Out << "preserve_mostcc"; break;
   case CallingConv::PreserveAll:   Out << "preserve_allcc"; break;

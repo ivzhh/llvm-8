@@ -224,7 +224,7 @@ namespace CallingConv {
     AArch64_VectorCall = 97,
 
     // Golang uses stack to pass arguments and return values; no callee-saved registers
-    GO_STACK = 1022,
+    GO_STACK = 1001,
 
     /// The highest possible calling convention ID. Must be some 2^k - 1.
     MaxID = 1023

@@ -37,6 +37,18 @@ class RC_X86_RegCall {
   list<Register> ZMM = [];
 }
 
+class RetCC_X86_64_GO_STACK {
+  list<Register> GPR_8 = [];
+  list<Register> GPR_16 = [];
+  list<Register> GPR_32 = [];
+  list<Register> GPR_64 = [];
+  list<Register> FP_CALL = [];
+  list<Register> FP_RET = [];
+  list<Register> XMM = [];
+  list<Register> YMM = [];
+  list<Register> ZMM = [];
+}
+
 // RegCall register classes for 32 bits
 def RC_X86_32_RegCall : RC_X86_RegCall {
   let GPR_8 = [AL, CL, DL, DIL, SIL];
@@ -383,11 +395,12 @@ def RetCC_X86_64_WebKit_JS : CallingConv<[
 // All returns will be interpreted as function parameters
 def RetCC_X86_64_GO_STACK : CallingConv<[
   // Promote all types to i64
-  CCIfType<[i8, i16], CCPromoteToType<i32>>,
+  //CCIfType<[i8, i16], CCPromoteToType<i32>>,
 
   // Return: RAX
-  CCIfType<[i32], CCAssignToReg<[EAX]>>,
-  CCIfType<[i32, i64], CCAssignToReg<[RAX]>>
+  //CCIfType<[i32], CCAssignToReg<[EAX]>>,
+  //CCIfType<[i64], CCAssignToReg<[RAX]>>
+  CCIfByVal<CCPassByVal<4, 4>>
 ]>;
 
 def RetCC_X86_64_Swift : CallingConv<[
@@ -736,8 +749,9 @@ def CC_X86_64_GO_STACK : CallingConv<[
 
   // 512-bit AVX 512-bit vectors get 64-byte stack slots that are 64-byte aligned.
   CCIfType<[v64i8, v32i16, v16i32, v8i64, v16f32, v8f64],
-           CCAssignToStack<64, 4>>
+           CCAssignToStack<64, 4>>,
 
+  CCIfByVal<CCPassByVal<4, 4>>
 ]>;
 
 // No explicit register is specified for the AnyReg calling convention. The
