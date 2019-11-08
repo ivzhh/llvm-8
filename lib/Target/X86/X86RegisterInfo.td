@@ -395,7 +395,7 @@ def GRH8 : RegisterClass<"X86", [i8],  8,
                               R12BH, R13BH, R14BH, R15BH)>;
 
 def GR16 : RegisterClass<"X86", [i16], 16,
-                         (add AX, CX, DX, SI, DI, BX, BP, SP,
+                         (add AX, CX, DX, SI, DI, BX, SP,
                               R8W, R9W, R10W, R11W, R14W, R15W, R12W, R13W)>;
 
 let isAllocatable = 0 in
@@ -405,7 +405,7 @@ def GRH16 : RegisterClass<"X86", [i16], 16,
                                R15WH)>;
 
 def GR32 : RegisterClass<"X86", [i32], 32,
-                         (add EAX, ECX, EDX, ESI, EDI, EBX, EBP, ESP,
+                         (add EAX, ECX, EDX, ESI, EDI, EBX, ESP,
                               R8D, R9D, R10D, R11D, R14D, R15D, R12D, R13D)>;
 
 // GR64 - 64-bit GPRs. This oddly includes RIP, which isn't accurate, since
@@ -415,7 +415,7 @@ def GR32 : RegisterClass<"X86", [i32], 32,
 // tests because of the inclusion of RIP in this register class.
 def GR64 : RegisterClass<"X86", [i64], 64,
                          (add RAX, RCX, RDX, RSI, RDI, R8, R9, R10, R11,
-                              RBX, R14, R15, R12, R13, RBP, RSP, RIP)>;
+                              RBX, R14, R15, R12, R13, RSP, RIP)>;
 
 // Segment registers for use by MOV instructions (and others) that have a
 //   segment register as one operand.  Always contain a 16-bit segment
